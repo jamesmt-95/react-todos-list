@@ -1,10 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TodoList from "./TodoList"
 
 const AddTodoForm = () => {
 
     const [item, setItem] = useState('')
-    const [todos, setTodos] = useState([]);
+
+    // useState with empty todos array
+    // const [todos, setTodos] = useState([]);
+
+    //useState with localStorage values
+    const [todos, setTodos] = useState(() => {
+        const localTodos = localStorage.getItem('Item');
+        if (localTodos === null) return []
+        return JSON.parse(localTodos)
+    });
+
+    //useEffect Hook to store todos in Local Storage
+    useEffect(() => {
+        localStorage.setItem('Item', JSON.stringify(todos))
+    }, [todos])
 
     // function to handle form submit
     const handleFormSubmit = (e) => {
@@ -19,7 +33,7 @@ const AddTodoForm = () => {
         setItem('');
     };
 
-    // function to handle cehckbox toggle
+    // function to handle checkbox toggle
     const handleToggle = (todoId, checked) => {
 
         const updateTodosToggle = todos.map((todo) => {
